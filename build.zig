@@ -24,6 +24,7 @@ pub fn build(b: *std.Build) void {
     exe.root_module.linkFramework("Cocoa", .{});
     exe.root_module.linkFramework("IOKit", .{});
     exe.root_module.linkFramework("CoreVideo", .{});
+    exe.root_module.linkFramework("OpenGL", .{});
     exe.root_module.linkSystemLibrary("GLFW", .{});
 
     if (transate_headers_option) translateHeaders(b);
@@ -41,6 +42,8 @@ fn translateHeaders(b: *std.Build) void {
         "translate-c",
         "/opt/homebrew/include/GLFW/glfw3.h",
         "> src/headers/glfw.zig",
+        "-D",
+        "GLFW_INCLUDE_GLCOREARB",
     });
 
     b.getInstallStep().dependOn(&command.step);
