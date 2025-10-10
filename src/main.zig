@@ -71,11 +71,10 @@ pub fn main() !void {
     gl.glAttachShader(program, frag_program);
     gl.glLinkProgram(program);
 
-    gl.glClearColor(0.07, 0.13, 0.17, 1);
-    gl.glClear(gl.GL_COLOR_BUFFER_BIT);
-    gl.glfwSwapBuffers(window);
+    const utime_handle = gl.glGetUniformLocation(program, "utime");
 
     var delta_time: f32 = 0;
+    var elapsed_time: f32 = 0;
     while (gl.glfwWindowShouldClose(window) == 0) {
         const time_stamp_start: i128 = std.time.nanoTimestamp();
 
@@ -91,9 +90,11 @@ pub fn main() !void {
 
         const time_stamp_end: i128 = std.time.nanoTimestamp();
         delta_time = @as(f32, @floatFromInt(time_stamp_end - time_stamp_start)) / @as(f32, @floatFromInt(std.time.ns_per_s));
+        elapsed_time += delta_time;
 
         rotateVertices(&vertices, delta_time * 0.5);
         gl.glBufferSubData(gl.GL_ARRAY_BUFFER, 0, @sizeOf(Vertex) * vertices.len, &vertices);
+        gl.glUniform1f(utime_handle, elapsed_time);
     }
 }
 

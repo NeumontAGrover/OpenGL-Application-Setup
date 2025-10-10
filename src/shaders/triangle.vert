@@ -5,6 +5,8 @@ layout (location = 1) in vec3 col;
 
 out vec4 vertColor;
 
+uniform float utime;
+
 void main() {
   gl_Position = vec4(pos, 1.0);
   vertColor = vec4(col, 1.0);
